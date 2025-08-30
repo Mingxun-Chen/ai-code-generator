@@ -30,7 +30,6 @@
 import { userLogin } from '@/api/userController.ts'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
 import { message } from 'ant-design-vue'
-import path from 'path'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -51,7 +50,7 @@ const handleSubmit = async (values: any) => {
   if (res.data.code === 0 && res.data.data) {
     await loginUserStore.fetchLoginUser()
     message.success('登录成功')
-    router.push({
+    await router.push({
       path: '/',
       replace: true,
     })
@@ -64,7 +63,7 @@ const handleSubmit = async (values: any) => {
 <style>
 #userLoginPage {
   max-width: 480px;
-  margin: 0px auto;
+  margin: 0 auto;
 }
 
 .title {
