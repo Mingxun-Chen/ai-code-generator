@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import me.cmx.aicodegenerator.exception.BusinessException;
 import me.cmx.aicodegenerator.exception.ErrorCode;
 import me.cmx.aicodegenerator.mapper.UserMapper;
-import me.cmx.aicodegenerator.model.dto.UserQueryRequest;
+import me.cmx.aicodegenerator.model.dto.user.UserQueryRequest;
 import me.cmx.aicodegenerator.model.entity.User;
 import me.cmx.aicodegenerator.model.enums.UserRoleEnum;
 import me.cmx.aicodegenerator.model.vo.LoginUserVO;

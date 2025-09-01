@@ -1,4 +1,4 @@
-package me.cmx.aicodegenerator.model.dto;
+package me.cmx.aicodegenerator.model.dto.user;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

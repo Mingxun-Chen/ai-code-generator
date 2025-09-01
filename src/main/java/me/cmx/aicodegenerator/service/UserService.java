@@ -3,7 +3,7 @@ package me.cmx.aicodegenerator.service;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
-import me.cmx.aicodegenerator.model.dto.UserQueryRequest;
+import me.cmx.aicodegenerator.model.dto.user.UserQueryRequest;
 import me.cmx.aicodegenerator.model.entity.User;
 import me.cmx.aicodegenerator.model.vo.LoginUserVO;
 import me.cmx.aicodegenerator.model.vo.UserVO;

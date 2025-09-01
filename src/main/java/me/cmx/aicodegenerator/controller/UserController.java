@@ -12,7 +12,7 @@ import me.cmx.aicodegenerator.constant.UserConstant;
 import me.cmx.aicodegenerator.exception.BusinessException;
 import me.cmx.aicodegenerator.exception.ErrorCode;
 import me.cmx.aicodegenerator.exception.ThrowUtils;
-import me.cmx.aicodegenerator.model.dto.*;
+import me.cmx.aicodegenerator.model.dto.user.*;
 import me.cmx.aicodegenerator.model.entity.User;
 import me.cmx.aicodegenerator.model.vo.LoginUserVO;
 import me.cmx.aicodegenerator.model.vo.UserVO;
