@@ -73,12 +73,6 @@ declare namespace API {
     message?: string
   }
 
-  type BaseResponseObject = {
-    code?: number
-    data?: Record<string, any>
-    message?: string
-  }
-
   type BaseResponsePageAppVO = {
     code?: number
     data?: PageAppVO

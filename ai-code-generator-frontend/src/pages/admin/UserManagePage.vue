@@ -42,11 +42,10 @@
     </a-table>
   </div>
 </template>
-
 <script lang="ts" setup>
+import { computed, onMounted, reactive, ref } from 'vue'
 import { deleteUser, listUserVoByPage } from '@/api/userController.ts'
 import { message } from 'ant-design-vue'
-import { computed, onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 
 const columns = [
@@ -84,7 +83,7 @@ const columns = [
   },
 ]
 
-// 数据
+// 展示的数据
 const data = ref<API.UserVO[]>([])
 const total = ref(0)
 
@@ -107,13 +106,6 @@ const fetchData = async () => {
   }
 }
 
-// 表格变化处理
-const doTableChange = (page: any) => {
-  searchParams.pageNum = page.current
-  searchParams.pageSize = page.pageSize
-  fetchData()
-}
-
 // 分页参数
 const pagination = computed(() => {
   return {
@@ -125,12 +117,14 @@ const pagination = computed(() => {
   }
 })
 
-// 页面加载时请求一次
-onMounted(() => {
+// 表格分页变化时的操作
+const doTableChange = (page: { current: number; pageSize: number }) => {
+  searchParams.pageNum = page.current
+  searchParams.pageSize = page.pageSize
   fetchData()
-})
+}
 
-// 获取数据
+// 搜索数据
 const doSearch = () => {
   // 重置页码
   searchParams.pageNum = 1
@@ -151,10 +145,17 @@ const doDelete = async (id: string) => {
     message.error('删除失败')
   }
 }
+
+// 页面加载时请求一次
+onMounted(() => {
+  fetchData()
+})
 </script>
 
-<style>
+<style scoped>
 #userManagePage {
-  width: 1200px;
+  padding: 24px;
+  background: white;
+  margin-top: 16px;
 }
 </style>

@@ -1,7 +1,10 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 import { getLoginUser } from '@/api/userController.ts'
 
+/**
+ * 登录用户信息
+ */
 export const useLoginUserStore = defineStore('loginUser', () => {
   // 默认值
   const loginUser = ref<API.LoginUserVO>({
@@ -16,7 +19,7 @@ export const useLoginUserStore = defineStore('loginUser', () => {
     }
   }
 
-  // 更新用户登录信息
+  // 更新登录用户信息
   function setLoginUser(newLoginUser: any) {
     loginUser.value = newLoginUser
   }
