@@ -96,7 +96,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>  implements AppS
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "应用代码不存在，请先生成代码");
         }
         // 7.复制文件到部署目录
-        String deployDirPath = AppConstant.CODE_OUTPUT_ROOT_DIR + File.separator + deployKey;
+        String deployDirPath = AppConstant.CODE_DEPLOY_ROOT_DIR + File.separator + deployKey;
         File deployDir = new File(deployDirPath);
         try {
             FileUtil.copyContent(sourceDir, deployDir, true);
