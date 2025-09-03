@@ -3,6 +3,7 @@ package me.cmx.aicodegenerator.service;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import me.cmx.aicodegenerator.model.dto.chathistory.ChatHistoryQueryRequest;
 import me.cmx.aicodegenerator.model.entity.ChatHistory;
 import me.cmx.aicodegenerator.model.entity.User;
@@ -51,4 +52,14 @@ public interface ChatHistoryService extends IService<ChatHistory> {
     Page<ChatHistory> listAppChatHistoryByPage(Long appId, int pageSize,
                                                LocalDateTime lastCreateTime,
                                                User loginUser);
+
+
+    /**
+     * 根据 appId 从数据库加载会话记忆到内存中
+     * @param appId 应用 Id
+     * @param chatMemory 会话记忆
+     * @param maxCount 最大会话记忆条数
+     * @return 返回会话记忆成功的条数
+     */
+    int loadChatHistoryToMemory(Long appId, MessageWindowChatMemory chatMemory, int maxCount);
 }
