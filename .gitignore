@@ -33,5 +33,6 @@ build/
 .vscode/
 
 ### Custom ###
+application.yml
 application-local.yml
 tmp
