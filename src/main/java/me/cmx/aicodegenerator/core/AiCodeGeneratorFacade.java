@@ -1,11 +1,18 @@
 package me.cmx.aicodegenerator.core;
 
+import cn.hutool.json.JSONUtil;
+import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.service.TokenStream;
+import dev.langchain4j.service.tool.ToolExecution;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.cmx.aicodegenerator.ai.AiCodeGenerateService;
 import me.cmx.aicodegenerator.ai.AiCodeGenerateServiceFactory;
 import me.cmx.aicodegenerator.ai.model.HtmlCodeResult;
 import me.cmx.aicodegenerator.ai.model.MultiFileCodeResult;
+import me.cmx.aicodegenerator.ai.model.message.AiResponseMessage;
+import me.cmx.aicodegenerator.ai.model.message.ToolExecutedMessage;
+import me.cmx.aicodegenerator.ai.model.message.ToolRequestMessage;
 import me.cmx.aicodegenerator.core.parser.CodeParserExecutor;
 import me.cmx.aicodegenerator.core.saver.CodeFileSaverExecutor;
 import me.cmx.aicodegenerator.exception.BusinessException;
@@ -37,7 +44,7 @@ public class AiCodeGeneratorFacade {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "生成类型为空");
         }
         // 根据 appId 获取 一个 AI.Service 服务
-        AiCodeGenerateService aiCodeGenerateService = aiCodeGenerateServiceFactory.getAiCodeGenerateService(appId);
+        AiCodeGenerateService aiCodeGenerateService = aiCodeGenerateServiceFactory.getAiCodeGenerateService(appId, codeGenType);
         return switch (codeGenType) {
             case HTML -> {
                 HtmlCodeResult htmlCodeResult = aiCodeGenerateService.generateHtmlCode(userMessage);
@@ -66,7 +73,7 @@ public class AiCodeGeneratorFacade {
         if (codeGenType == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "生成类型为空");
         }
-        AiCodeGenerateService aiCodeGenerateService = aiCodeGenerateServiceFactory.getAiCodeGenerateService(appId);
+        AiCodeGenerateService aiCodeGenerateService = aiCodeGenerateServiceFactory.getAiCodeGenerateService(appId, codeGenType);
         return switch (codeGenType) {
             case HTML -> {
                 Flux<String> codeStream = aiCodeGenerateService.generateHtmlCodeStream(userMessage);
@@ -75,6 +82,10 @@ public class AiCodeGeneratorFacade {
             case MULTI_FILE -> {
                 Flux<String> codeStream = aiCodeGenerateService.generateMultiFileCodeStream(userMessage);
                 yield processCodeStream(codeStream, codeGenType, appId);
+            }
+            case VUE_PROJECT -> {
+                TokenStream tokenStream = aiCodeGenerateService.generateVueProjectCodeStream(appId, userMessage);
+                yield processTokenStream(tokenStream);
             }
             default -> {
                 String errorMessage = "生成的类型不支持：" + codeGenType.getValue();
@@ -97,6 +108,37 @@ public class AiCodeGeneratorFacade {
             } catch (Exception e) {
                 log.error("保存失败：{}", e.getMessage());
             }
+        });
+    }
+
+    /**
+     * 将 TokenStream 转换为 Flux<String>，并传递工具调用信息
+     *
+     * @param tokenStream TokenStream 对象
+     * @return Flux<String> 流式响应
+     */
+    private Flux<String> processTokenStream(TokenStream tokenStream) {
+        return Flux.create(sink -> {
+            tokenStream.onPartialResponse((String partialResponse) -> {
+                        AiResponseMessage aiResponseMessage = new AiResponseMessage(partialResponse);
+                        sink.next(JSONUtil.toJsonStr(aiResponseMessage));
+                    })
+                    .onPartialToolExecutionRequest((index, toolExecutionRequest) -> {
+                        ToolRequestMessage toolRequestMessage = new ToolRequestMessage(toolExecutionRequest);
+                        sink.next(JSONUtil.toJsonStr(toolRequestMessage));
+                    })
+                    .onToolExecuted((ToolExecution toolExecution) -> {
+                        ToolExecutedMessage toolExecutedMessage = new ToolExecutedMessage(toolExecution);
+                        sink.next(JSONUtil.toJsonStr(toolExecutedMessage));
+                    })
+                    .onCompleteResponse((ChatResponse response) -> {
+                        sink.complete();
+                    })
+                    .onError((Throwable error) -> {
+                        error.printStackTrace();
+                        sink.error(error);
+                    })
+                    .start();
         });
     }
 
