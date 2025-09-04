@@ -169,7 +169,7 @@ onMounted(() => {
       <div class="input-section">
         <a-textarea
           v-model:value="userPrompt"
-          placeholder="帮我创建个人博客网站"
+          placeholder="问问我吧"
           :rows="4"
           :maxlength="1000"
           class="prompt-input"

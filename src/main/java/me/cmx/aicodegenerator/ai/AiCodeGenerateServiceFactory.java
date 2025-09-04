@@ -27,12 +27,16 @@ public class AiCodeGenerateServiceFactory {
 
     @Resource
     private ChatModel chatModel;
+
     @Resource
     private StreamingChatModel openAiStreamingChatModel;
+
     @Resource
     private StreamingChatModel reasoningStreamingChatModel;
+
     @Resource
     private RedisChatMemoryStore redisChatMemoryStore;
+
     @Resource
     private ChatHistoryService chatHistoryService;
 
@@ -78,10 +82,10 @@ public class AiCodeGenerateServiceFactory {
                 .builder()
                 .id(appId)
                 .chatMemoryStore(redisChatMemoryStore)
-                .maxMessages(20)
+                .maxMessages(30)
                 .build();
         // 从数据库加载历史对话到记忆中
-        chatHistoryService.loadChatHistoryToMemory(appId, chatMemory, 20);
+        chatHistoryService.loadChatHistoryToMemory(appId, chatMemory, 30);
         // 根据代码类型生成不同的模型配置
         return switch (codeGenType) {
             case VUE_PROJECT -> AiServices.builder(AiCodeGenerateService.class)
