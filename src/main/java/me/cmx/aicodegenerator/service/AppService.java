@@ -2,6 +2,7 @@ package me.cmx.aicodegenerator.service;
 
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
+import me.cmx.aicodegenerator.model.dto.app.AppAddRequest;
 import me.cmx.aicodegenerator.model.dto.app.AppQueryRequest;
 import me.cmx.aicodegenerator.model.entity.App;
 import me.cmx.aicodegenerator.model.entity.User;
@@ -45,6 +46,14 @@ public interface AppService extends IService<App> {
      * @return
      */
     List<AppVO> getAppVOList(List<App> appList);
+
+    /**
+     * 创建 App
+     * @param appAddRequest
+     * @param loginUser
+     * @return
+     */
+    Long createApp(AppAddRequest appAddRequest, User loginUser);
 
     /**
      * 根据 prompt 生成代码

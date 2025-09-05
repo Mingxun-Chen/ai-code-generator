@@ -4,6 +4,9 @@
     <div class="header-bar">
       <div class="header-left">
         <h1 class="app-name">{{ appInfo?.appName || '网站生成器' }}</h1>
+        <a-tag v-if="appInfo?.codeGenType" color="green" class="code-gen-type-tag">
+          {{ formatCodeGenType(appInfo.codeGenType) }}
+        </a-tag>
       </div>
       <div class="header-right">
         <a-button type="default" @click="showAppDetail">
@@ -174,6 +177,7 @@ import AppDetailModal from '@/components/AppDetailModal.vue'
 import DeploySuccessModal from '@/components/DeploySuccessModal.vue'
 import aiAvatar from '@/assets/aiAvatar.png'
 import { API_BASE_URL, getStaticPreviewUrl } from '@/config/env'
+import { formatCodeGenType } from '@/utils/codeGenTypes.ts'
 
 import {
   CloudUploadOutlined,
@@ -827,6 +831,10 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   border: none;
+}
+
+.code-gen-type-tag {
+  font-size: 12px;
 }
 
 /* 响应式设计 */
