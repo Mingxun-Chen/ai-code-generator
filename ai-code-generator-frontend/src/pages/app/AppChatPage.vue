@@ -1,38 +1,39 @@
 <template>
   <div id="appChatPage">
-    <!-- 顶部栏 -->
-    <div class="header-bar">
-      <div class="header-left">
-        <h1 class="app-name">{{ appInfo?.appName || '网站生成器' }}</h1>
-        <a-tag v-if="appInfo?.codeGenType" color="blue" class="code-gen-type-tag">
-          {{ formatCodeGenType(appInfo.codeGenType) }}
-        </a-tag>
-      </div>
-      <div class="header-right">
-        <a-button type="default" @click="showAppDetail">
-          <template #icon>
-            <InfoCircleOutlined />
-          </template>
-          应用详情
-        </a-button>
+    <!-- 顶部栏容器 -->
+    <div class="header-container">
+      <div class="header-bar">
+        <div class="header-left">
+          <h1 class="app-name">{{ appInfo?.appName || '网站生成器' }}</h1>
+          <a-tag v-if="appInfo?.codeGenType" color="blue" class="code-gen-type-tag">
+            {{ formatCodeGenType(appInfo.codeGenType) }}
+          </a-tag>
+        </div>
+        <div class="header-right">
+          <a-button type="default" @click="showAppDetail">
+            <template #icon>
+              <InfoCircleOutlined />
+            </template>
+            应用详情
+          </a-button>
         <a-button
-          type="primary"
-          ghost
+          type="default"
           @click="downloadCode"
           :loading="downloading"
           :disabled="!isOwner"
         >
-          <template #icon>
-            <DownloadOutlined />
-          </template>
-          下载代码
-        </a-button>
-        <a-button type="primary" @click="deployApp" :loading="deploying">
-          <template #icon>
-            <CloudUploadOutlined />
-          </template>
-          部署
-        </a-button>
+            <template #icon>
+              <DownloadOutlined />
+            </template>
+            下载代码
+          </a-button>
+          <a-button type="primary" @click="deployApp" :loading="deploying">
+            <template #icon>
+              <CloudUploadOutlined />
+            </template>
+            部署
+          </a-button>
+        </div>
       </div>
     </div>
 
@@ -779,12 +780,34 @@ onUnmounted(() => {
   background: #fdfdfd;
 }
 
+/* 顶部栏容器 */
+.header-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 12px;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  margin-bottom: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.header-container:hover {
+  box-shadow: 
+    0 6px 25px rgba(0, 0, 0, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
 /* 顶部栏 */
 .header-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 20px 24px;
+  background: transparent;
 }
 
 .header-left {
@@ -795,18 +818,61 @@ onUnmounted(() => {
 
 .code-gen-type-tag {
   font-size: 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+  border: none;
+  color: white;
+  padding: 2px 8px;
 }
 
 .app-name {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #1a1a1a 0%, #434343 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
 }
 
 .header-right {
   display: flex;
   gap: 12px;
+}
+
+.header-right .ant-btn {
+  height: 40px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-right .ant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-right .ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+  border: none;
+}
+
+.header-right .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #40a9ff 0%, #69c0ff 100%);
+}
+
+.header-right .ant-btn-default {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(24, 144, 255, 0.2);
+  color: #1890ff;
+}
+
+.header-right .ant-btn-default:hover {
+  background: rgba(24, 144, 255, 0.05);
+  border-color: #1890ff;
 }
 
 /* 主要内容区域 */
@@ -998,12 +1064,38 @@ onUnmounted(() => {
 }
 
 @media (max-width: 768px) {
+  .header-container {
+    margin-bottom: 12px;
+    border-radius: 8px;
+  }
+
   .header-bar {
-    padding: 12px 16px;
+    padding: 16px 20px;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .header-left {
+    justify-content: center;
+    text-align: center;
   }
 
   .app-name {
-    font-size: 16px;
+    font-size: 18px;
+  }
+
+  .header-right {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-right .ant-btn {
+    height: 36px;
+    font-size: 14px;
+    flex: 1;
+    min-width: 100px;
   }
 
   .main-content {

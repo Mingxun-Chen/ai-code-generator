@@ -245,7 +245,7 @@ watch(userPrompt, (v) => {
       <!-- 网站标题和描述 -->
       <div class="hero-section">
         <h1 class="hero-title">AI 应用生成平台</h1>
-        <p class="hero-description">一句话轻松创建网站应用</p>
+        <p class="hero-description">与AI对话创建网站应用</p>
       </div>
 
       <!-- 用户提示词输入框 -->
@@ -307,51 +307,55 @@ watch(userPrompt, (v) => {
       </div>
 
       <!-- 我的作品 -->
-      <div class="section">
-        <h2 class="section-title">我的作品</h2>
-        <div class="app-grid">
-          <AppCard
-            v-for="app in myApps"
-            :key="app.id"
-            :app="app"
-            @view-chat="viewChat"
-            @view-work="viewWork"
-          />
-        </div>
-        <div class="pagination-wrapper">
-          <a-pagination
-            v-model:current="myAppsPage.current"
-            v-model:page-size="myAppsPage.pageSize"
-            :total="myAppsPage.total"
-            :show-size-changer="false"
-            :show-total="(total: number) => `共 ${total} 个应用`"
-            @change="loadMyApps"
-          />
+      <div class="content-card" v-if="loginUserStore.loginUser.id">
+        <div class="section">
+          <h2 class="section-title">我的作品</h2>
+          <div class="app-grid">
+            <AppCard
+              v-for="app in myApps"
+              :key="app.id"
+              :app="app"
+              @view-chat="viewChat"
+              @view-work="viewWork"
+            />
+          </div>
+          <div class="pagination-wrapper">
+            <a-pagination
+              v-model:current="myAppsPage.current"
+              v-model:page-size="myAppsPage.pageSize"
+              :total="myAppsPage.total"
+              :show-size-changer="false"
+              :show-total="(total: number) => `共 ${total} 个应用`"
+              @change="loadMyApps"
+            />
+          </div>
         </div>
       </div>
 
       <!-- 精选案例 -->
-      <div class="section">
-        <h2 class="section-title">精选案例</h2>
-        <div class="featured-grid">
-          <AppCard
-            v-for="app in featuredApps"
-            :key="app.id"
-            :app="app"
-            :featured="true"
-            @view-chat="viewChat"
-            @view-work="viewWork"
-          />
-        </div>
-        <div class="pagination-wrapper">
-          <a-pagination
-            v-model:current="featuredAppsPage.current"
-            v-model:page-size="featuredAppsPage.pageSize"
-            :total="featuredAppsPage.total"
-            :show-size-changer="false"
-            :show-total="(total: number) => `共 ${total} 个案例`"
-            @change="loadFeaturedApps"
-          />
+      <div class="content-card">
+        <div class="section">
+          <h2 class="section-title">精选案例</h2>
+          <div class="featured-grid">
+            <AppCard
+              v-for="app in featuredApps"
+              :key="app.id"
+              :app="app"
+              :featured="true"
+              @view-chat="viewChat"
+              @view-work="viewWork"
+            />
+          </div>
+          <div class="pagination-wrapper">
+            <a-pagination
+              v-model:current="featuredAppsPage.current"
+              v-model:page-size="featuredAppsPage.pageSize"
+              :total="featuredAppsPage.total"
+              :show-size-changer="false"
+              :show-total="(total: number) => `共 ${total} 个案例`"
+              @change="loadFeaturedApps"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -457,7 +461,6 @@ watch(userPrompt, (v) => {
   text-align: center;
   padding: 80px 0 60px;
   margin-bottom: 28px;
-  color: #1e293b;
   position: relative;
   overflow: hidden;
 }
@@ -470,9 +473,9 @@ watch(userPrompt, (v) => {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(ellipse 800px 400px at center, rgba(59, 130, 246, 0.12) 0%, transparent 70%),
-    linear-gradient(45deg, transparent 30%, rgba(139, 92, 246, 0.05) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(16, 185, 129, 0.04) 50%, transparent 70%);
+    radial-gradient(ellipse 800px 400px at center, rgba(255, 255, 255, 0.15) 0%, transparent 70%),
+    linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.08) 50%, transparent 70%),
+    linear-gradient(-45deg, transparent 30%, rgba(139, 92, 246, 0.06) 50%, transparent 70%);
   animation: heroGlow 10s ease-in-out infinite alternate;
 }
 
@@ -501,7 +504,7 @@ watch(userPrompt, (v) => {
   font-weight: 700;
   margin: 0 0 20px;
   line-height: 1.2;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #c4d0fa 30%, #637fee 60%, #022bf9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -509,6 +512,8 @@ watch(userPrompt, (v) => {
   position: relative;
   z-index: 2;
   animation: titleShimmer 3s ease-in-out infinite;
+  text-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+  filter: drop-shadow(0 2px 8px rgba(139, 92, 246, 0.2));
 }
 
 @keyframes titleShimmer {
@@ -524,10 +529,11 @@ watch(userPrompt, (v) => {
 .hero-description {
   font-size: 20px;
   margin: 0;
-  opacity: 0.8;
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.9);
   position: relative;
   z-index: 2;
+  text-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
+  font-weight: 500;
 }
 
 /* 输入区域 */
@@ -607,9 +613,41 @@ watch(userPrompt, (v) => {
   box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
 }
 
+/* 内容卡片 */
+.content-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 48px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.1),
+    0 8px 25px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.content-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
 /* 区域标题 */
 .section {
-  margin-bottom: 60px;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .section-title {
@@ -617,6 +655,7 @@ watch(userPrompt, (v) => {
   font-weight: 600;
   margin-bottom: 32px;
   color: #1e293b;
+  position: relative;
 }
 
 /* 我的作品网格 */
@@ -652,6 +691,13 @@ watch(userPrompt, (v) => {
     font-size: 16px;
   }
 
+  .content-card {
+    padding: 24px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    border-radius: 16px;
+  }
+
   .app-grid,
   .featured-grid {
     grid-template-columns: 1fr;
@@ -659,6 +705,10 @@ watch(userPrompt, (v) => {
 
   .quick-actions {
     justify-content: center;
+  }
+
+  .section-title {
+    font-size: 24px;
   }
 }
 </style>
