@@ -16,12 +16,12 @@
             </template>
             应用详情
           </a-button>
-        <a-button
-          type="default"
-          @click="downloadCode"
-          :loading="downloading"
-          :disabled="!isOwner"
-        >
+          <a-button
+            type="default"
+            @click="downloadCode"
+            :loading="downloading"
+            :disabled="!isOwner"
+          >
             <template #icon>
               <DownloadOutlined />
             </template>
@@ -118,6 +118,7 @@
                 :placeholder="getInputPlaceholder()"
                 :rows="4"
                 :maxlength="1000"
+                :auto-size="{ minRows: 4, maxRows: 6 }"
                 @keydown.enter.prevent="sendMessage"
                 :disabled="isGenerating || !isOwner"
               />
@@ -128,6 +129,7 @@
               :placeholder="getInputPlaceholder()"
               :rows="4"
               :maxlength="1000"
+              :auto-size="{ minRows: 4, maxRows: 6 }"
               @keydown.enter.prevent="sendMessage"
               :disabled="isGenerating"
             />
@@ -784,7 +786,7 @@ onUnmounted(() => {
 .header-container {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border-radius: 12px;
-  box-shadow: 
+  box-shadow:
     0 4px 20px rgba(0, 0, 0, 0.08),
     0 2px 8px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.8);
@@ -795,7 +797,7 @@ onUnmounted(() => {
 }
 
 .header-container:hover {
-  box-shadow: 
+  box-shadow:
     0 6px 25px rgba(0, 0, 0, 0.12),
     0 4px 12px rgba(0, 0, 0, 0.06);
   transform: translateY(-1px);

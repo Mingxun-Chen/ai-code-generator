@@ -6,6 +6,7 @@ import { useLoginUserStore } from '@/stores/loginUser'
 import { addApp, listMyAppVoByPage, listGoodAppVoByPage } from '@/api/appController'
 import { getDeployUrl } from '@/config/env'
 import AppCard from '@/components/AppCard.vue'
+import { SendOutlined } from '@ant-design/icons-vue'
 
 const router = useRouter()
 const loginUserStore = useLoginUserStore()
@@ -255,12 +256,13 @@ watch(userPrompt, (v) => {
           :placeholder="displayText"
           :rows="4"
           :maxlength="1000"
+          :auto-size="{ minRows: 4, maxRows: 6 }"
           class="prompt-input"
         />
         <div class="input-actions">
           <a-button type="primary" size="large" @click="createApp" :loading="creating">
             <template #icon>
-              <span>↑</span>
+              <SendOutlined />
             </template>
           </a-button>
         </div>
