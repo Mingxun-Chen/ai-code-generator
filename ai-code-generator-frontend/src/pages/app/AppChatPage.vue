@@ -173,7 +173,7 @@
         </div>
         <div class="preview-content">
           <div v-if="!previewUrl && !isGenerating" class="preview-placeholder">
-            <div class="placeholder-icon">🌐</div>
+            <div class="placeholder-icon"><LoadingOutlined /></div>
             <p>网站文件生成完成后将在这里展示</p>
           </div>
           <div v-else-if="isGenerating" class="preview-loading">
@@ -237,6 +237,7 @@ import {
   InfoCircleOutlined,
   DownloadOutlined,
   EditOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons-vue'
 
 const route = useRoute()
