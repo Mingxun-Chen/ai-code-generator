@@ -244,7 +244,7 @@ watch(userPrompt, (v) => {
     <div class="container">
       <!-- 网站标题和描述 -->
       <div class="hero-section">
-        <h1 class="hero-title">AI 应用生成平台</h1>
+        <h1 class="hero-title">所想即所得</h1>
         <p class="hero-description">与AI对话创建网站应用</p>
       </div>
 
@@ -621,7 +621,7 @@ watch(userPrompt, (v) => {
   padding: 48px;
   margin-top: 40px;
   margin-bottom: 40px;
-  box-shadow: 
+  box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.1),
     0 8px 25px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -637,7 +637,7 @@ watch(userPrompt, (v) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  background:
     radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
   pointer-events: none;

@@ -60,7 +60,14 @@ import { useRouter } from 'vue-router'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
 import { userLogout } from '@/api/userController.ts'
-import { LogoutOutlined, HomeOutlined, UserOutlined, AppstoreOutlined } from '@ant-design/icons-vue'
+import {
+  LogoutOutlined,
+  HomeOutlined,
+  UserOutlined,
+  AppstoreOutlined,
+  TeamOutlined,
+  FileOutlined,
+} from '@ant-design/icons-vue'
 
 const loginUserStore = useLoginUserStore()
 const router = useRouter()
@@ -81,7 +88,7 @@ const originItems = [
   },
   {
     key: '/admin/userManage',
-    icon: () => h(UserOutlined),
+    icon: () => h(TeamOutlined),
     label: '用户管理',
     title: '用户管理',
   },
@@ -90,6 +97,12 @@ const originItems = [
     icon: () => h(AppstoreOutlined),
     label: '应用管理',
     title: '应用管理',
+  },
+  {
+    key: '/doc',
+    icon: () => h(FileOutlined),
+    label: '应用文档',
+    title: '应用文档',
   },
 ]
 
