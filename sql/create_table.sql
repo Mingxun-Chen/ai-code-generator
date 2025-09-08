@@ -63,3 +63,5 @@ create table chat_history
     INDEX idx_appId_createTime (appId, createTime) -- 游标查询核心索引
 ) comment '对话历史' collate = utf8mb4_unicode_ci;
 
+-- 将 chat_history 表中的 message 字段类型从 TEXT 修改为 LONGTEXT
+ALTER TABLE chat_history MODIFY COLUMN message LONGTEXT NOT NULL COMMENT '消息';
