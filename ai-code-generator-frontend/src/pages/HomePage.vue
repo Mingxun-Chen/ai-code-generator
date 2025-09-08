@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
@@ -13,6 +13,71 @@ const loginUserStore = useLoginUserStore()
 // 用户提示词
 const userPrompt = ref('')
 const creating = ref(false)
+const displayText = ref('问问我吧') // 动态占位文本
+
+// 你要轮换的提示词
+const samples = [
+  '生成一个个人博客首页，要有文章卡片、标签分类和搜索功能。',
+  '做一个数据看板，包含折线图、柱状图和筛选条件，界面简洁美观。',
+  '生成一个待办清单应用，支持添加、删除、勾选完成，还能拖拽排序。',
+  '做一个图片画廊，支持瀑布流布局和懒加载，点击图片可放大预览。',
+  '生成一个 Markdown 编辑器，左边输入右边实时预览，支持代码高亮。',
+  '做一个响应式登录注册页面，带表单校验和提示信息。',
+  '生成一个番茄钟工具，可以开始/暂停/重置，时间到有提示音。',
+  '做一个购物车界面，支持商品列表、加入购物车和结算价格计算。',
+  '生成一个交互式表格，可以搜索、排序、分页，数据来自本地 JSON。',
+  '做一个简洁的聊天界面，有消息列表、输入框和发送按钮。',
+]
+
+// 打字机状态
+let idx = 0 // 当前样例下标
+let char = 0 // 当前字符位置
+let deleting = false // 是否在回退
+let timer: number | null = null
+
+// 速度控制（毫秒）
+const TYPE_DELAY = 60 // 打字速度
+const ERASE_DELAY = 40 // 回退速度
+const HOLD_AFTER_TYPE = 1200 // 打完一条后的停顿
+const HOLD_AFTER_ERASE = 300 // 清空后的停顿
+
+function tick() {
+  // 用户开始输入时暂停动画
+  if (userPrompt.value.trim().length > 0) {
+    scheduleNext(300)
+    return
+  }
+
+  const full = samples[idx]
+  if (!deleting) {
+    // 正在打字
+    char++
+    displayText.value = full.slice(0, char)
+    if (char >= full.length) {
+      deleting = true
+      scheduleNext(HOLD_AFTER_TYPE)
+      return
+    }
+    scheduleNext(TYPE_DELAY)
+  } else {
+    // 正在回退
+    char--
+    displayText.value = full.slice(0, Math.max(char, 0))
+    if (char <= 0) {
+      deleting = false
+      idx = (idx + 1) % samples.length
+      scheduleNext(HOLD_AFTER_ERASE)
+      return
+    }
+    scheduleNext(ERASE_DELAY)
+  }
+}
+
+function scheduleNext(delay: number) {
+  if (timer) clearTimeout(timer)
+  // @ts-ignore
+  timer = setTimeout(tick, delay)
+}
 
 // 我的应用数据
 const myApps = ref<API.AppVO[]>([])
@@ -50,7 +115,9 @@ const createApp = async () => {
     return
   }
 
+  const start = Date.now()
   creating.value = true
+
   try {
     const res = await addApp({
       initPrompt: userPrompt.value.trim(),
@@ -58,7 +125,6 @@ const createApp = async () => {
 
     if (res.data.code === 0 && res.data.data) {
       message.success('应用创建成功')
-      // 跳转到对话页面，确保ID是字符串类型
       const appId = String(res.data.data)
       await router.push(`/app/chat/${appId}`)
     } else {
@@ -68,7 +134,11 @@ const createApp = async () => {
     console.error('创建应用失败：', error)
     message.error('创建失败，请重试')
   } finally {
-    creating.value = false
+    const elapsed = Date.now() - start
+    const delay = Math.max(0, 800 - elapsed) // 确保总时长至少 800ms
+    setTimeout(() => {
+      creating.value = false
+    }, delay)
   }
 }
 
@@ -135,6 +205,7 @@ const viewWork = (app: API.AppVO) => {
 onMounted(() => {
   loadMyApps()
   loadFeaturedApps()
+  scheduleNext(500)
 
   // 鼠标跟随光效
   const handleMouseMove = (e: MouseEvent) => {
@@ -154,6 +225,18 @@ onMounted(() => {
     document.removeEventListener('mousemove', handleMouseMove)
   }
 })
+
+onBeforeUnmount(() => {
+  if (timer) clearTimeout(timer)
+})
+
+// 当用户清空输入框时，恢复动画
+watch(userPrompt, (v) => {
+  if (!v || v.trim().length === 0) {
+    // 稍等一下再恢复，避免频繁触发
+    scheduleNext(400)
+  }
+})
 </script>
 
 <template>
@@ -169,7 +252,7 @@ onMounted(() => {
       <div class="input-section">
         <a-textarea
           v-model:value="userPrompt"
-          placeholder="问问我吧"
+          :placeholder="displayText"
           :rows="4"
           :maxlength="1000"
           class="prompt-input"
@@ -286,6 +369,7 @@ onMounted(() => {
     radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+  background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
   position: relative;
   overflow: hidden;
 }
@@ -298,18 +382,22 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image:
-    linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-    linear-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
-  background-size:
-    100px 100px,
-    100px 100px,
-    20px 20px,
-    20px 20px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%) -20px 0/ 40px 40px,
+    linear-gradient(225deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%) -20px 0/ 40px 40px,
+    linear-gradient(315deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%) 0px 0/ 40px 40px,
+    linear-gradient(45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%) 0px 0/ 40px 40px;
+  animation: foldShimmer 15s ease-in-out infinite alternate;
   pointer-events: none;
-  animation: gridFloat 20s ease-in-out infinite;
+}
+
+@keyframes foldShimmer {
+  0% {
+    filter: brightness(1);
+  }
+  100% {
+    filter: brightness(1.3);
+  }
 }
 
 /* 动态光效 */

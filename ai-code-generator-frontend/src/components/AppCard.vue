@@ -3,7 +3,7 @@
     <div class="app-preview">
       <img v-if="app.cover" :src="app.cover" :alt="app.appName" />
       <div v-else class="app-placeholder">
-        <span>🤖</span>
+        <img src="@/assets/defaultCover.png" alt="placeholder" class="placeholder-img" />
       </div>
       <div class="app-overlay">
         <a-space>

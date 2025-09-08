@@ -6,7 +6,10 @@
         <RouterLink to="/">
           <div class="header-left">
             <img class="logo" src="@/assets/logo.png" alt="Logo" />
-            <h1 class="site-title">ZeroCodeX</h1>
+            <div class="site-title-wrapper">
+              <h1 class="site-title">ZeroCodeX</h1>
+              <p class="site-subtitle">AI 应用生成平台</p>
+            </div>
           </div>
         </RouterLink>
       </a-col>
@@ -53,7 +56,7 @@ import { useRouter } from 'vue-router'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
 import { userLogout } from '@/api/userController.ts'
-import { LogoutOutlined, HomeOutlined } from '@ant-design/icons-vue'
+import { LogoutOutlined, HomeOutlined, UserOutlined, AppstoreOutlined } from '@ant-design/icons-vue'
 
 const loginUserStore = useLoginUserStore()
 const router = useRouter()
@@ -74,11 +77,13 @@ const originItems = [
   },
   {
     key: '/admin/userManage',
+    icon: () => h(UserOutlined),
     label: '用户管理',
     title: '用户管理',
   },
   {
     key: '/admin/appManage',
+    icon: () => h(AppstoreOutlined),
     label: '应用管理',
     title: '应用管理',
   },
@@ -132,24 +137,43 @@ const doLogout = async () => {
   padding: 0 24px;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .logo {
   height: 48px;
   width: 48px;
-}
-
-.site-title {
-  margin: 0;
-  font-size: 18px;
-  color: #1890ff;
+  margin-top: 12px;
 }
 
 .ant-menu-horizontal {
   border-bottom: none !important;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* logo 和文字的间距 */
+}
+
+.site-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.site-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 40%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 15px;
+}
+
+.site-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b; /* 灰蓝色，可换成白色或浅灰 */
+  opacity: 0.9;
+  margin-top: 5px;
 }
 </style>
