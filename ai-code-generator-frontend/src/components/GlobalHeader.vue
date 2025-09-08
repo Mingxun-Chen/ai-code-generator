@@ -33,6 +33,10 @@
               </a-space>
               <template #overlay>
                 <a-menu>
+                  <a-menu-item @click="goToProfile">
+                    <UserOutlined />
+                    更新个人信息
+                  </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录
@@ -114,6 +118,11 @@ const handleMenuClick: MenuProps['onClick'] = (e) => {
   if (key.startsWith('/')) {
     router.push(key)
   }
+}
+
+// 跳转到个人信息页面
+const goToProfile = () => {
+  router.push('/user/profile')
 }
 
 // 退出登录
