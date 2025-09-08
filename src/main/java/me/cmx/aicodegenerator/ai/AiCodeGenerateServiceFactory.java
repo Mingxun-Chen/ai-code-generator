@@ -97,6 +97,7 @@ public class AiCodeGenerateServiceFactory {
                         .hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage.from(
                                 toolExecutionRequest, "Error: there is no tool called " + toolExecutionRequest.name()
                         ))
+                        .maxSequentialToolsInvocations(20)
                         .inputGuardrails(new PromptSafetyInputGuardrail())
                         .build();
             }
@@ -107,6 +108,7 @@ public class AiCodeGenerateServiceFactory {
                         .chatModel(chatModel)
                         .streamingChatModel(openAiStreamingChatModel)
                         .chatMemory(chatMemory)
+                        .maxSequentialToolsInvocations(10)
                         .inputGuardrails(new PromptSafetyInputGuardrail())
                         .build();
             }
