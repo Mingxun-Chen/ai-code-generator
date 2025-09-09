@@ -35,4 +35,5 @@ build/
 ### Custom ###
 application.yml
 application-local.yml
+application-prod.yml
 tmp
